@@ -1,0 +1,35 @@
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: comsumer
+          uri: lb://consumer-demo
+          predicates:
+            - Path=/consumer/**
+        #id可以随便配置
+        - id: user-service-route
+         #代理的地址，就是原始地址
+          uri: lb://user-service
+         #断言，如果路径上上/user会被路由到代理地址去
+          predicates:
+           - Path=/user/**
+          filters:
+           - MyParam=name
+      default-filters:
+        #可以在响应头添加key和value
+        -  AddResponseHeader=X-Response-Default-MyName, wenjie
+        -  AddResponseHeader=X-Response-Default-MyX, jiangwenjie
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+    # 获取服务地址列表间隔时间，默认30秒
+    registry-fetch-interval-seconds: 10
+  instance:
+    prefer-ip-address: true
+server:
+  port: 10010

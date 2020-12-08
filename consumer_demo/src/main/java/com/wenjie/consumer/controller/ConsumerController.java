@@ -39,19 +39,12 @@ public class ConsumerController {
         if (id == 1) {
             throw new RuntimeException("太忙了");
         }
-        /*String url = "http://localhost:9091/user/"+id;
-
-        //获取eureka中注册的user-service的实例
-        List<ServiceInstance> serviceInstances = discoveryClient.getInstances("user-service");
-        ServiceInstance serviceInstance = serviceInstances.get(0);
-
-        url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + "/user/" + id;*/
         String url = "http://user-service/user/" + id;
         return restTemplate.getForObject(url, String.class);
     }
 
     public String queryByIdFallback(Long id){
-        log.error("查询用户信息失败。id：{}", id);
+        //log.error("查询用户信息失败。id：{}", id);
         return "对不起，网络太拥挤了！";
     }
 

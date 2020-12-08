@@ -17,6 +17,11 @@ public class UserService {
      * @return 用户
      */
     public User queryById(Long id){
+
+        //sleep 2秒钟 是否重试
+
+
+
         return userMapper.selectByPrimaryKey(id);
     }
 }
