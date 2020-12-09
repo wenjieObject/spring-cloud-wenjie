@@ -865,8 +865,157 @@ Spring Cloud Bus作用：将git仓库的配置文件更新，在不重启系统�
 实现步骤：
 
 1. 启动RabbitMQ；
+
+   默认端口5672，默认可视化端口15672
+
 2. 修改配置中心config-server；
+
+   **pom文件修改**
+
+   ```xml
+       <dependencies>
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-web</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-config-server</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-bus</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+           </dependency>
+       </dependencies>
+   ```
+
+   yml文件修改，配置rabbitmq和暴露触发消息总线的地址
+
+   management下include如果不加引号会报405错误，不知什么问题
+
+   ```yaml
+   server:
+     port: 12000
+   spring:
+     # rabbitmq的配置信息；如下配置的rabbit都是默认值，其实可以完全不配置
+     rabbitmq:
+       host: localhost
+       port: 5672
+       username: guest
+       password: guest
+     application:
+       name: config-server
+     cloud:
+       config:
+         server:
+           git:
+             uri: https://github.com/wenjieObject/spring-cloud-wenjie-config.git
+             default-label: main
+   
+   eureka:
+     client:
+       service-url:
+         defaultZone: http://127.0.0.1:10086/eureka
+   management: # 暴露触发消息总线的地址
+     endpoints:
+       web:
+         exposure:
+           include: "bus-refresh"
+   ```
+
+   
+
 3. 修改服务提供工程user-service；
+
+   pom文件添加bus和rabbitmq
+
+   ```xml
+       <dependencies>
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-web</artifactId>
+           </dependency>
+           <!-- 通用Mapper启动器 -->
+           <dependency>
+               <groupId>tk.mybatis</groupId>
+               <artifactId>mapper-spring-boot-starter</artifactId>
+           </dependency>
+           <!-- mysql驱动 -->
+           <dependency>
+               <groupId>mysql</groupId>
+               <artifactId>mysql-connector-java</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-starter-config</artifactId>
+               <version>2.1.1.RELEASE</version>
+           </dependency>
+   
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-bus</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-actuator</artifactId>
+           </dependency>
+   
+       </dependencies>
+   ```
+
+   bootstrap.yml文件修改，添加rabbitmq
+
+   ```yaml
+     rabbitmq:
+       host: localhost
+       port: 5672
+       username: guest
+       password: guest
+   ```
+
+   controller修改，在需要刷新配置的时候,添加@RefreshScope这个配置
+
+   ```java
+   @RestController
+   @RequestMapping("/user")
+   @RefreshScope
+   public class UserController {
+   
+       @Autowired
+       private UserService userService;
+   
+       @Value("${test.name}")
+       private String name;
+   
+       @GetMapping("/name")
+       public String getName(){
+           return name;
+       }
+   }
+   ```
+
+   
+
+   
+
+   
+
 4. 测试
 
 **小结**：

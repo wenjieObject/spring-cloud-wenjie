@@ -9,9 +9,9 @@
         <outputRelativeToContentRoot value="true" />
         <module name="consumer_demo" />
         <module name="eureka_server" />
-        <module name="user_service" />
-        <module name="gateway" />
         <module name="config_server" />
+        <module name="gateway" />
+        <module name="user_service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
