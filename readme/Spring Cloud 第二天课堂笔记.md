@@ -778,48 +778,71 @@ eureka:
 实现步骤：
 
 1. 添加启动器依赖；
+
+   ```xml
+     <dependencies>
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-web</artifactId>
+           </dependency>
+           <!-- 通用Mapper启动器 -->
+           <dependency>
+               <groupId>tk.mybatis</groupId>
+               <artifactId>mapper-spring-boot-starter</artifactId>
+           </dependency>
+           <!-- mysql驱动 -->
+           <dependency>
+               <groupId>mysql</groupId>
+               <artifactId>mysql-connector-java</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+           </dependency>
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-starter-config</artifactId>
+               <version>2.1.1.RELEASE</version>
+           </dependency>
+       </dependencies>
+   ```
+
+   
+
 2. 修改配置文件；
+
+   修改原有的application.yml为bootstrap.yml,这里需要注意name,profile,label等标签，{name}-{profile}.yml
+
+   ```yaml
+   spring:
+     cloud:
+       config:
+         # 要与仓库中的配置文件的application保持一致
+         name: user
+         # 要与仓库中的配置文件的profile保持一致
+         profile: dev
+         # 要与仓库中的配置文件所属的版本（分支）一样
+         label: main
+         discovery:
+           # 使用配置中心
+           enabled: true
+           # 配置中心服务名
+           service-id: config-server
+   eureka:
+     client:
+       service-url:
+         defaultZone: http://127.0.0.1:10086/eureka
+   ```
+
+   
+
 3. 启动测试
 
 **小结**：
 
 将原来的application.yml删除；然后添加bootstrap.yml配置文件，该文件也是spring boot的默认配置文件，其内容经常配置一些项目中固定的配置项。如果是项目经常变动的应该配置到application.yml中，现在使用了配置中心则应该配置到git仓库中对于的配置文件。
 
-- 依赖
 
-```xml
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-            <version>2.1.1.RELEASE</version>
-        </dependency>
-```
-
-
-
-- 配置文件bootstrap.yml
-
-```yml
-spring:
-  cloud:
-    config:
-      # 要与仓库中的配置文件的application保持一致
-      name: user
-      # 要与仓库中的配置文件的profile保持一致
-      profile: dev
-      # 要与仓库中的配置文件所属的版本（分支）一样
-      label: master
-      discovery:
-        # 使用配置中心
-        enabled: true
-        # 配置中心服务名
-        service-id: config-server
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
-```
 
 
 

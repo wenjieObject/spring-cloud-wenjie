@@ -8,8 +8,6 @@ spring:
       server:
         git:
           uri: https://github.com/wenjieObject/spring-cloud-wenjie-config.git
-          #username: wenjieObject
-          #password: 2011gkz
           default-label: main
 eureka:
   client:
