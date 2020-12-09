@@ -690,28 +690,30 @@ spring cloud config作用：可以通过修改在git仓库中的配置文件实�
 
   ```yaml
   server:
-  port: ${port:9091}
+    port: ${port:9091}
   spring:
-  datasource:
-  driver-class-name: com.mysql.jdbc.Driver
-  url: jdbc:mysql://localhost:3306/springcloud
-  username: root
-  password: root
-  application:
-  #应用名
-  name: user-service
+    datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/springcloud?characterEncoding=utf-8&serverTimezone=UTC
+      username: root
+      password: root
+    application:
+      name: user-service
   mybatis:
-  type-aliases-package: com.itheima.user.pojo
+    type-aliases-package: com.wenjie.user.pojo
   eureka:
-  client:
-  service-url:
-  defaultZone: http://127.0.0.1:10086/eureka
-  instance:
-  ip-address: 127.0.0.1
-  prefer-ip-address: true
-  lease-expiration-duration-in-seconds: 90
-  lease-renewal-interval-in-seconds: 30
-  
+    client:
+      service-url:
+        defaultZone: http://127.0.0.1:10086/eureka
+    instance:
+      # 更倾向使用ip地址，而不是host名
+      prefer-ip-address: true
+      # ip地址
+      ip-address: 127.0.0.1
+      # 续约间隔，默认30秒
+      lease-renewal-interval-in-seconds: 5
+      # 服务失效时间，默认90秒
+      lease-expiration-duration-in-seconds: 5
   ```
 
   
@@ -740,6 +742,8 @@ spring cloud config作用：可以通过修改在git仓库中的配置文件实�
 
 - 配置中心的配置文件
 
+  注意default-label 这里的分支如果不是master必须指定，因为github的默认分支是main所以这里必须指定
+
 ```yml
 server:
   port: 12000
@@ -750,7 +754,9 @@ spring:
     config:
       server:
         git:
-          uri: https://gitee.com/goheima/heima-config.git
+          uri: https://github.com/wenjieObject/spring-cloud-wenjie-config.git
+          #这里的分支如果不是master必须指定，因为github的默认分支是main所以这里必须指定
+          default-label: main
 eureka:
   client:
     service-url:
@@ -758,6 +764,8 @@ eureka:
 ```
 
 > 在gitee中修改了配置文件会在配置中心服务及时更新。
+>
+> 访问http://localhost:12000/user-dev.yml ，可以看到配置文件地址
 
 ## 13. 获取配置中心配置
 

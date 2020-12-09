@@ -1,0 +1,15 @@
+server:
+  port: 12000
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/wenjieObject/spring-cloud-wenjie-config.git
+          default-label: main
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
