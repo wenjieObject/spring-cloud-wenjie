@@ -1012,100 +1012,11 @@ Spring Cloud Bus作用：将git仓库的配置文件更新，在不重启系统�
 
    
 
-   
-
-   
-
 4. 测试
 
-**小结**：
-
-- config-server的依赖添加内容
-
-```xml
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-bus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
-        </dependency>
-
-```
+   发送post请求到 `http://127.0.0.1:12000/actuator/bus-refresh`
 
 
-
-- config-server的配置文件添加内容
-
-```yml
-server:
-  port: 12000
-spring:
-  application:
-    name: config-server
-  cloud:
-    config:
-      server:
-        git:
-          uri: https://gitee.com/goheima/heima-config.git
-  # 配置rabbitmq信息；如果是都与默认值一致则不需要配置
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-eureka:
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
-management:
-  endpoints:
-    web:
-      exposure:
-        # 暴露触发消息总线的地址
-        include: bus-refresh
-```
-
-
-
-- user-service的依赖添加内容
-
-```xml
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-bus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-```
-
-
-
-- user-service的配置文件添加内容
-
-```yml
-  # 配置rabbitmq信息；如果是都与默认值一致则不需要配置
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-
-```
-
-
-
-- UserController的修改
-
-![1561003475491](assets/1561003475491.png) 
 
 ## 16. Spring Cloud 体系技术综合应用说明
 
