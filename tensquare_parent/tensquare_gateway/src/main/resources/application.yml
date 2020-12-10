@@ -1,0 +1,30 @@
+server:
+  port: 9013
+spring:
+  application:
+    name: tensquare-gateway
+  cloud:
+    gateway:
+      routes:
+        - id:  article-service-route
+          uri: lb://tensquare-article
+          predicates:
+            - Path=/article/**
+          filters: # 表示过滤1个路径，2表示两个路径，以此类推
+            - MyParam=name
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:6868/eureka/
+  instance:
+    prefer-ip-address: true
