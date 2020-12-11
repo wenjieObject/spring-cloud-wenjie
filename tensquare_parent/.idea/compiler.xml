@@ -11,6 +11,7 @@
         <module name="tensquare_article" />
         <module name="tensquare_gateway" />
         <module name="tensquare_user" />
+        <module name="tensquare_notice" />
         <module name="tensquare_common" />
       </profile>
     </annotationProcessing>
@@ -22,6 +23,7 @@
       <module name="tensquare_encrypt" options="-parameters" />
       <module name="tensquare_eureka" options="-parameters" />
       <module name="tensquare_gateway" options="-parameters" />
+      <module name="tensquare_notice" options="-parameters" />
       <module name="tensquare_parent" options="-parameters" />
       <module name="tensquare_user" options="-parameters" />
     </option>

@@ -15,6 +15,7 @@
         <module>tensquare_eureka</module>
         <module>tensquare_encrypt</module>
         <module>tensquare_gateway</module>
+        <module>tensquare_notice</module>
     </modules>
 
     <parent>

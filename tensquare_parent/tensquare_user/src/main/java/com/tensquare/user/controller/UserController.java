@@ -26,4 +26,15 @@ public class UserController {
         return new Result(false, StatusCode.OK, "登录失败");
     }
 
+    /**
+     * 根据id查询用户
+     * @param id
+     * @return
+     */
+    @RequestMapping(value="/{id}",method = RequestMethod.GET)
+    public Result selectById(@PathVariable("id") String id) {
+        User user = userService.selectById(id);
+        return new Result(true, StatusCode.OK, "查询成功", user);
+    }
+
 }
